@@ -1,25 +1,48 @@
-import logo from './logo.svg';
 import './App.css';
+import Phaser from 'phaser';
+import { IonPhaser } from '@ion-phaser/react'
+
+const game = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  physics: {
+      default: 'arcade',
+      arcade: {
+          gravity: { y: 200 }
+      }
+  },
+  scene: {
+    init: init,
+    create: create,
+    update: update
+  }
+}
+
+function init() {
+  this.cameras.main.setBackgroundColor('#24252A')
+}
+
+function create() {
+  this.helloWorld = this.add.text(
+    this.cameras.main.centerX,
+    this.cameras.main.centerY,
+    "Hello World", {
+      font: "40px Arial",
+      fill: "#ffffff"
+    }
+  );
+  this.helloWorld.setOrigin();
+}
+
+function update() {
+  this.helloWorld.angle += 1;
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <IonPhaser game={game} />
+  )
 }
 
 export default App;
