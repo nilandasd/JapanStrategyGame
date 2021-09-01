@@ -1,4 +1,5 @@
-Browser based strategy game
+Japan Strategy Game
+ A Browser Gased Strategy Game
 
 Developers:
     Niland Schumacher
