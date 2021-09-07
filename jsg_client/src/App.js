@@ -2,47 +2,14 @@ import './App.css';
 import Phaser from 'phaser';
 import { IonPhaser } from '@ion-phaser/react'
 
-const game = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  physics: {
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 200 }
-      }
-  },
-  scene: {
-    init: init,
-    create: create,
-    update: update
-  }
-}
-
-function init() {
-  this.cameras.main.setBackgroundColor('#24252A')
-}
-
-function create() {
-  this.helloWorld = this.add.text(
-    this.cameras.main.centerX,
-    this.cameras.main.centerY,
-    "Hello World", {
-      font: "40px Arial",
-      fill: "#ffffff"
-    }
-  );
-  this.helloWorld.setOrigin();
-}
-
-function update() {
-  this.helloWorld.angle += 1;
-}
+import Game from './Game.js';
 
 function App() {
   return (
-    <IonPhaser game={game} />
-  )
+    <div>
+      <Game></Game>
+    </div>
+  );
 }
 
 export default App;
