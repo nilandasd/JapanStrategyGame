@@ -5,6 +5,8 @@ const game = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
+  player: 0,
+  cursors: 0,
   physics: {
       default: 'arcade',
       arcade: {
@@ -12,10 +14,15 @@ const game = {
       }
   },
   scene: {
+    preload: preload,
     init: init,
     create: create,
     update: update
   }
+}
+
+function preload() {
+    this.load.image('samuraihelmet', 'assets/samuraihelmet.png');
 }
 
 function init() {
@@ -31,11 +38,25 @@ function create() {
       fill: "#ffffff"
     }
   );
+  this.player = this.physics.add.image(400, 300, 'samuraihelmet');
+  this.player.setCollideWorldBounds(true);
+  this.cursors = this.input.keyboard.createCursorKeys();
   this.helloWorld.setOrigin();
 }
 
 function update() {
   this.helloWorld.angle += 1;
+  this.player.setVelocity(0);
+
+  if (this.cursors.left.isDown){
+    this.player.setVelocityX(-200);
+  } else if (this.cursors.right.isDown) {
+    this.player.setVelocityX(200);
+  } else if (this.cursors.up.isDown) {
+    this.player.setVelocityY(-200);
+  }  else if (this.cursors.down.isDown) {
+    this.player.setVelocityY(200);
+  }  
 }
 
 function Game() {
