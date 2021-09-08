@@ -10,6 +10,7 @@ const gameRoutes = require("./routes/game");
 const server = require("https");
 const PORT = process.env.PORT || 5000;
 const uri = process.env.URI;
+console.log("test");
 
 mongoose
   .connect(uri, {
