@@ -3,14 +3,12 @@ import { IonPhaser } from '@ion-phaser/react'
 
 const game = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  player: 0,
-  cursors: 0,
+  width: 1200,
+  height: 700,
   physics: {
       default: 'arcade',
       arcade: {
-          gravity: { y: 200 }
+          debug: true
       }
   },
   scene: {
@@ -21,8 +19,11 @@ const game = {
   }
 }
 
+var player;
+
 function preload() {
     this.load.image('samuraihelmet', 'assets/samuraihelmet.png');
+    this.load.image('gray', 'assets/GrayBackground.png');
 }
 
 function init() {
@@ -38,26 +39,44 @@ function create() {
       fill: "#ffffff"
     }
   );
-  this.player = this.physics.add.image(400, 300, 'samuraihelmet');
-  this.player.setCollideWorldBounds(true);
-  this.cursors = this.input.keyboard.createCursorKeys();
   this.helloWorld.setOrigin();
+
+  player = this.physics.add.image(400, 300, 'samuraihelmet');
+  player.setCollideWorldBounds(true);
+
+  this.cursors = this.input.keyboard.createCursorKeys();
+
+  var sprite = this.add.sprite(200, 100, 'gray').setScale(.5);
+  var rect = new Phaser.Geom.Polygon([
+    0, 0,
+    0, 225,
+    400, 225,
+    400, 0
+  ]);
+  sprite.setInteractive(rect, Phaser.Geom.Polygon.Contains);
+  sprite.on('pointerover', function () {
+    sprite.setTint(0xfaaaaf);
+  });
+  sprite.on('pointerout', function () {
+    sprite.clearTint();
+  });
 }
 
 function update() {
   this.helloWorld.angle += 1;
-  this.player.setVelocity(0);
+  player.setVelocity(0);
 
   if (this.cursors.left.isDown){
-    this.player.setVelocityX(-200);
+    player.setVelocityX(-200);
   } else if (this.cursors.right.isDown) {
-    this.player.setVelocityX(200);
+    player.setVelocityX(200);
   } else if (this.cursors.up.isDown) {
-    this.player.setVelocityY(-200);
+    player.setVelocityY(-200);
   }  else if (this.cursors.down.isDown) {
-    this.player.setVelocityY(200);
+    player.setVelocityY(200);
   }  
 }
+
 
 function Game() {
   return (
