@@ -31,24 +31,17 @@ function init() {
 }
 
 function create() {
-  this.helloWorld = this.add.text(
-    this.cameras.main.centerX,
-    this.cameras.main.centerY,
-    "Hello World", {
-      font: "40px Arial",
-      fill: "#ffffff"
-    }
-  );
-  this.helloWorld.setOrigin();
 
   player = this.physics.add.image(400, 300, 'samuraihelmet');
   player.setCollideWorldBounds(true);
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
-  var sprite = this.add.sprite(200, 100, 'gray').setScale(.5);
-  var sprite2 = this.add.sprite(400, 400, 'gray').setScale(.5);
-  
+  var sprites = Array.from(Array(8).keys());
+  for (let i = 0; i < sprites.length; i ++){
+    sprites[i] = Array.from(Array(10).keys());
+  }
+
   var rect = new Phaser.Geom.Polygon([
     0, 0,
     0, 225,
@@ -56,19 +49,21 @@ function create() {
     400, 0
   ]);
 
- setZoneBehavior(sprite2, rect);
+  let y = 100;
+  let x = 100;
 
-  sprite.setInteractive(rect, Phaser.Geom.Polygon.Contains);
-  sprite.on('pointerover', function () {
-    sprite.setTint(0xfaaaaf);
-  });
-  sprite.on('pointerout', function () {
-    sprite.clearTint();
-  });
+  for (let i = 0; i < sprites.length; i++){
+    for (let j = 0; j < sprites[i].length; j++) {
+      sprites[i][j] = this.add.sprite(x, y, 'gray').setScale(.25);
+      x += 110;
+      setZoneBehavior(sprites[i][j], rect);
+    }
+    x = 100;
+    y += 70;
+  }
 }
 
 function update() {
-  this.helloWorld.angle += 1;
   player.setVelocity(0);
 
   if (this.cursors.left.isDown){
