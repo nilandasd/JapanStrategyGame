@@ -47,12 +47,17 @@ function create() {
   this.cursors = this.input.keyboard.createCursorKeys();
 
   var sprite = this.add.sprite(200, 100, 'gray').setScale(.5);
+  var sprite2 = this.add.sprite(400, 400, 'gray').setScale(.5);
+  
   var rect = new Phaser.Geom.Polygon([
     0, 0,
     0, 225,
     400, 225,
     400, 0
   ]);
+
+ setZoneBehavior(sprite2, rect);
+
   sprite.setInteractive(rect, Phaser.Geom.Polygon.Contains);
   sprite.on('pointerover', function () {
     sprite.setTint(0xfaaaaf);
@@ -77,6 +82,15 @@ function update() {
   }  
 }
 
+function setZoneBehavior(spriteIn, shape) {
+  spriteIn.setInteractive(shape, Phaser.Geom.Polygon.Contains);
+  spriteIn.on('pointerover', function () {
+    spriteIn.setTint(0xfaaaaf);
+  });
+  spriteIn.on('pointerout', function () {
+    spriteIn.clearTint();
+  });
+}
 
 function Game() {
   return (
