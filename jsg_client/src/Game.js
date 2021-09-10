@@ -19,10 +19,7 @@ const game = {
   }
 }
 
-var player;
-
 function preload() {
-    this.load.image('samuraihelmet', 'assets/samuraihelmet.png');
     this.load.image('gray', 'assets/GrayBackground.png');
 }
 
@@ -32,14 +29,9 @@ function init() {
 
 function create() {
 
-  player = this.physics.add.image(400, 300, 'samuraihelmet');
-  player.setCollideWorldBounds(true);
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-
-  var sprites = Array.from(Array(8).keys());
-  for (let i = 0; i < sprites.length; i ++){
-    sprites[i] = Array.from(Array(10).keys());
+  var zones = Array.from(Array(8).keys());
+  for (let i = 0; i < zones.length; i ++){
+    zones[i] = Array.from(Array(10).keys());
   }
 
   var rect = new Phaser.Geom.Polygon([
@@ -52,11 +44,11 @@ function create() {
   let y = 100;
   let x = 100;
 
-  for (let i = 0; i < sprites.length; i++){
-    for (let j = 0; j < sprites[i].length; j++) {
-      sprites[i][j] = this.add.sprite(x, y, 'gray').setScale(.25);
+  for (let i = 0; i < zones.length; i++){
+    for (let j = 0; j < zones[i].length; j++) {
+      zones[i][j] = this.add.sprite(x, y, 'gray').setScale(.25);
       x += 110;
-      setZoneBehavior(sprites[i][j], rect);
+      setZoneBehavior(zones[i][j], rect);
     }
     x = 100;
     y += 70;
@@ -64,27 +56,25 @@ function create() {
 }
 
 function update() {
-  player.setVelocity(0);
 
-  if (this.cursors.left.isDown){
-    player.setVelocityX(-200);
-  } else if (this.cursors.right.isDown) {
-    player.setVelocityX(200);
-  } else if (this.cursors.up.isDown) {
-    player.setVelocityY(-200);
-  }  else if (this.cursors.down.isDown) {
-    player.setVelocityY(200);
-  }  
 }
 
 function setZoneBehavior(spriteIn, shape) {
   spriteIn.setInteractive(shape, Phaser.Geom.Polygon.Contains);
   spriteIn.on('pointerover', function () {
-    spriteIn.setTint(0xfaaaaf);
+    if (!spriteIn.isTinted){
+      spriteIn.setTint(0xfaaaaf);
+    }
   });
   spriteIn.on('pointerout', function () {
-    spriteIn.clearTint();
   });
+  spriteIn.on('pointerdown', function () {
+    if (spriteIn.isTinted){
+      spriteIn.clearTint();
+      return;
+    }
+    spriteIn.setTint(0xf2222f);
+  })
 }
 
 function Game() {
