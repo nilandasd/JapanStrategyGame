@@ -29,6 +29,8 @@ function init() {
 
 function create() {
 
+  const text = this.add.text(50, 50, 'TopText').setFont('24px Arial').setColor('#ffffff');
+
   this.zones = Array.from(Array(8).keys());
   for (let i = 0; i < this.zones.length; i ++){
     this.zones[i] = Array.from(Array(10).keys());
@@ -41,14 +43,17 @@ function create() {
     400, 0
   ]);
 
-  let y = 100;
+  let y = 150;
   let x = 100;
+  let s;
 
   for (let i = 0; i < this.zones.length; i++){
     for (let j = 0; j < this.zones[i].length; j++) {
       this.zones[i][j] = this.add.sprite(x, y, 'gray').setScale(.25);
+      s = "("+i.toString()+","+j.toString()+")";
+      this.zones[i][j].setName(`${s}`);
       x += 110;
-      setZoneBehavior(this.zones[i][j], rect);
+      setZoneBehavior(this.zones[i][j], rect, text);
     }
     x = 100;
     y += 70;
@@ -59,7 +64,7 @@ function update() {
 
 }
 
-function setZoneBehavior(spriteIn, shape) {
+function setZoneBehavior(spriteIn, shape, uiText) {
   spriteIn.setInteractive(shape, Phaser.Geom.Polygon.Contains);
   spriteIn.on('pointerover', function () {
     if (!spriteIn.isTinted){
@@ -69,6 +74,7 @@ function setZoneBehavior(spriteIn, shape) {
   spriteIn.on('pointerout', function () {
   });
   spriteIn.on('pointerdown', function () {
+    uiText.setText("Clicked: "+spriteIn.name);
     if (spriteIn.isTinted){
       spriteIn.clearTint();
       return;
