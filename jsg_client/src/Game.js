@@ -29,9 +29,9 @@ function init() {
 
 function create() {
 
-  var zones = Array.from(Array(8).keys());
-  for (let i = 0; i < zones.length; i ++){
-    zones[i] = Array.from(Array(10).keys());
+  this.zones = Array.from(Array(8).keys());
+  for (let i = 0; i < this.zones.length; i ++){
+    this.zones[i] = Array.from(Array(10).keys());
   }
 
   var rect = new Phaser.Geom.Polygon([
@@ -44,11 +44,11 @@ function create() {
   let y = 100;
   let x = 100;
 
-  for (let i = 0; i < zones.length; i++){
-    for (let j = 0; j < zones[i].length; j++) {
-      zones[i][j] = this.add.sprite(x, y, 'gray').setScale(.25);
+  for (let i = 0; i < this.zones.length; i++){
+    for (let j = 0; j < this.zones[i].length; j++) {
+      this.zones[i][j] = this.add.sprite(x, y, 'gray').setScale(.25);
       x += 110;
-      setZoneBehavior(zones[i][j], rect);
+      setZoneBehavior(this.zones[i][j], rect);
     }
     x = 100;
     y += 70;
