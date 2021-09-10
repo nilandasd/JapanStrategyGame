@@ -29,7 +29,16 @@ function init() {
 
 function create() {
 
-  const text = this.add.text(50, 50, 'TopText').setFont('24px Arial').setColor('#ffffff');
+  //const text = this.add.text(50, 50, 'TopText').setFont('24px Arial').setColor('#ffffff');
+  const uiItems = {
+    // Values
+    text: this.add.text(50, 50, 'Clicked: (X, X)').setFont('24px Arial').setColor('#ffffff'),
+    numDisplay: this.add.text(250, 50, 'Count: 0').setFont('24px Arial').setColor('#ffffff'),
+    num: 0,
+
+    // Methods
+    incNum: incNum
+  };
 
   this.zones = Array.from(Array(8).keys());
   for (let i = 0; i < this.zones.length; i ++){
@@ -53,7 +62,7 @@ function create() {
       s = "("+i.toString()+","+j.toString()+")";
       this.zones[i][j].setName(`${s}`);
       x += 110;
-      setZoneBehavior(this.zones[i][j], rect, text);
+      setZoneBehavior(this.zones[i][j], rect, uiItems);
     }
     x = 100;
     y += 70;
@@ -64,7 +73,7 @@ function update() {
 
 }
 
-function setZoneBehavior(spriteIn, shape, uiText) {
+function setZoneBehavior(spriteIn, shape, uiObj) {
   spriteIn.setInteractive(shape, Phaser.Geom.Polygon.Contains);
   spriteIn.on('pointerover', function () {
     if (!spriteIn.isTinted){
@@ -74,13 +83,19 @@ function setZoneBehavior(spriteIn, shape, uiText) {
   spriteIn.on('pointerout', function () {
   });
   spriteIn.on('pointerdown', function () {
-    uiText.setText("Clicked: "+spriteIn.name);
+    uiObj.text.setText("Clicked: "+spriteIn.name);
+    uiObj.incNum();
     if (spriteIn.isTinted){
       spriteIn.clearTint();
       return;
     }
     spriteIn.setTint(0xf2222f);
   })
+}
+
+function incNum() {
+  this.num += 1;
+  this.numDisplay.setText("Count: "+this.num.toString());
 }
 
 function Game() {
