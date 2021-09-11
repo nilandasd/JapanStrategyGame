@@ -1,2 +1,2 @@
-/jsg_server/.env
-/jsg_server/node_modules
+.env
+node_modules/

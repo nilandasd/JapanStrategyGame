@@ -5,12 +5,12 @@ const app = express();
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const authRoutes = require("./routes/auth");
-const gameRoutes = require("./routes/game");
+const logger = require("morgan");
+const { initialize } = require("express-openapi");
+const swaggerUi = require("swagger-ui-express");
 const server = require("https");
 const PORT = process.env.PORT || 5000;
 const uri = process.env.URI;
-console.log("test");
 
 mongoose
   .connect(uri, {
@@ -26,6 +26,8 @@ mongoose
     console.error("Error connecting to mongo", err);
   });
 
+app.listen(3030);
+app.use(logger("dev"));
 app.use(express.static("build"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,11 +39,27 @@ app.use(
   })
 );
 
-app.use("/auth", authRoutes);
-app.use("/game", gameRoutes);
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./build/index.html"));
 });
+
+initialize({
+  app,
+  apiDoc: require("./api/api-doc"),
+  paths: "./api/paths",
+});
+
+app.use(
+  "/api-documentation",
+  swaggerUi.serve,
+  swaggerUi.setup(null, {
+    swaggerOptions: {
+      url: "http://localhost:3030/api-docs",
+    },
+  })
+);
+
+
 
 //SELF SIGNED!
 server
