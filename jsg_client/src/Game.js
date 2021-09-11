@@ -29,13 +29,20 @@ function init() {
 
 function create() {
 
-
   const rect = new Phaser.Geom.Polygon([
     0, 0,
     0, 225,
     400, 225,
     400, 0
   ]);
+
+  this.player = {
+    turnQueue: [],
+    action: {},
+
+    newAction: newAction,
+    queueAction: queueAction
+  };
 
   // UI
   this.uiItems = {
@@ -83,14 +90,14 @@ function create() {
       s = "("+i.toString()+","+j.toString()+")";
       this.board.zones[i][j].sprite.setName(`${s}`);
       x += 110;
-      setZoneBehavior(this.board.zones[i][j], rect, this.uiItems);
+      setZoneBehavior(this.board.zones[i][j], rect, this.uiItems, this.player);
     }
     x = 100;
     y += 70;
   }
 
   this.uiItems.turnButton.setInteractive(rect, Phaser.Geom.Polygon.Contains);
-  setTurnButton(this.board.zones, this.uiItems);
+  setTurnButton(this.board.zones, this.uiItems, this.player.turnQueue);
 }
 
 function update() {
@@ -103,14 +110,14 @@ function update() {
   }
 }
 
-function setTurnButton(zones, ui) {
+function setTurnButton(zones, ui, turnq) {
   ui.turnButton.on("pointerdown", function() {
     ui.incNum(-ui.num);
-    newTurn(zones);
+    newTurn(zones, turnq);
   });
 }
 
-function setZoneBehavior(zone, shape, uiObj) {
+function setZoneBehavior(zone, shape, uiObj, player) {
   zone.sprite.setInteractive(shape, Phaser.Geom.Polygon.Contains);
   zone.sprite.on('pointerover', function () {
 
@@ -120,20 +127,22 @@ function setZoneBehavior(zone, shape, uiObj) {
   });
   zone.sprite.on('pointerdown', function () {
     uiObj.text.setText("Clicked: "+zone.sprite.name);
-    zone.incCount();
     zone.alignment = 1;
     uiObj.incNum(1);
+    player.newAction(0, 0, 1);
+    player.queueAction();
   })
 }
 
-function newTurn(zones) {
+function newTurn(zones, turnq) {
   for (let i = 0; i < zones.length; i++){
     for (let j = 0; j < zones[i].length; j++) {
-      if (zones[i][j].alignment == 0){
+      if (zones[i][j].alignment === 0){
         zones[i][j].incCount();
       }
     }
   }
+  console.log(turnq);
 }
 
 function incNum(amount) {
@@ -144,6 +153,23 @@ function incNum(amount) {
 function incCount() {
   this.count += 1;
   this.text.setText(this.count.toString());
+}
+
+function newAction(from, to, type) {
+  if (from !== -1) {
+    this.action.from = from;
+  }
+  if (to !== -1) {
+    this.action.to = to;
+  }
+  if (type !== -1) {
+    this.action.type = type;
+  }
+};
+
+function queueAction() {
+  this.turnQueue.push(this.action);
+  this.action = {};
 }
 
 function Game() {
