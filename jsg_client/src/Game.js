@@ -52,7 +52,7 @@ function create() {
   };
 
   // Board
-  const board = {
+  this.board = {
     // Values
     zones: [],
 
@@ -60,26 +60,27 @@ function create() {
   };
   
   // Init Board Zones
-  board.zones = Array.from(Array(8).keys());
-  for (let i = 0; i < board.zones.length; i ++){
-    board.zones[i] = Array.from(Array(10).keys());
+  this.board.zones = Array.from(Array(8).keys());
+  for (let i = 0; i < this.board.zones.length; i ++){
+    this.board.zones[i] = Array.from(Array(10).keys());
   }
   
   // Set Zone Behavior and size
-  for (let i = 0; i < board.zones.length; i++){
-    for (let j = 0; j < board.zones[i].length; j++) {
-      board.zones[i][j] = {
+  for (let i = 0; i < this.board.zones.length; i++){
+    for (let j = 0; j < this.board.zones[i].length; j++) {
+      this.board.zones[i][j] = {
         sprite: this.add.sprite(x, y, 'gray').setScale(.25),
         text: this.add.text(x-5, y-7, '0').setFont('18px Arial').setColor('#ffffff').setAlign('center'),
         id: (i.toString()+"x"+j.toString()),
         count: 0,
+        alignment: 0,
 
         incCount: incCount
       };
       s = "("+i.toString()+","+j.toString()+")";
-      board.zones[i][j].sprite.setName(`${s}`);
+      this.board.zones[i][j].sprite.setName(`${s}`);
       x += 110;
-      setZoneBehavior(board.zones[i][j], rect, uiItems);
+      setZoneBehavior(this.board.zones[i][j], rect, uiItems);
     }
     x = 100;
     y += 70;
@@ -87,7 +88,13 @@ function create() {
 }
 
 function update() {
-
+  for (let i = 0; i < this.board.zones.length; i++){
+    for (let j = 0; j < this.board.zones[i].length; j++) {
+      if (this.board.zones[i][j].alignment > 0){
+        this.board.zones[i][j].sprite.setTint(0xfaaaaf);
+      }
+    }
+  }
 }
 
 function setZoneBehavior(zone, shape, uiObj) {
@@ -101,6 +108,7 @@ function setZoneBehavior(zone, shape, uiObj) {
   zone.sprite.on('pointerdown', function () {
     uiObj.text.setText("Clicked: "+zone.sprite.name);
     zone.incCount();
+    zone.alignment = 1;
     uiObj.incNum();
   })
 }
